@@ -19,9 +19,7 @@ function Provider({ children }) {
       fetch('https://swapi-trybe.herokuapp.com/api/planets/')
         .then((response) => response.json())
         .then((data) => {
-          console.log(data.results);
           const returnDele = deleteKey(data.results);
-          console.log(returnDele);
           setState(returnDele);
         })
         .catch((error) => {

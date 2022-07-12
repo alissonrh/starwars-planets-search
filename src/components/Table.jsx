@@ -3,27 +3,49 @@ import context from '../context/myContext';
 
 function Table() {
   const MENOS_UM = -1;
+
   const date = useContext(context);
+
   const [searchText, setSearchText] = useState('');
-  const [list, setList] = useState();
+  const [list, setFilter] = useState();
+  const [filtes, setFilters] = useState([]);
+  const [column, setColumn] = useState('population');
+  const [comparison, setComparison] = useState('maior que');
+  const [value, setValue] = useState(0);
 
   useEffect(() => {
     if (searchText === '') {
-      setList(date);
+      setFilter(date);
     } else {
-      setList(
+      setFilter(
         date.filter((e) => e.name.toLowerCase()
           .indexOf(searchText.toLowerCase()) > MENOS_UM),
       );
     }
   }, [MENOS_UM, date, searchText]);
 
-  /*   data.filter((e) => {
-    if (e.name.indexOf('') > 1) {
-      return true;
-    } else {
-      return false
-    } */
+  const handleClick = (listdate) => {
+    switch (comparison) {
+    case 'maior que':
+      setFilter(listdate
+        .filter((planet) => Number(planet[column]) > Number(value)));
+      break;
+    case 'menor que':
+      setFilter(listdate
+        .filter((planet) => Number(planet[column]) < Number(value)));
+      break;
+    default:
+      setFilter(listdate
+        .filter((planet) => Number(planet[column]) === Number(value)));
+    }
+    setFilters(
+      [...filtes, {
+        column,
+        comparison,
+        value,
+      }],
+    );
+  };
 
   return (
     <>
@@ -35,6 +57,62 @@ function Table() {
           onChange={ (e) => setSearchText(e.target.value) }
         />
 
+      </header>
+      <header>
+        <label htmlFor="column">
+          Column
+          <select
+            data-testid="column-filter"
+            id="column"
+            onChange={ (e) => setColumn(
+              e.target.value,
+            ) }
+            value={ column }
+          >
+            <option>population</option>
+            <option>orbital_period</option>
+            <option>diameter</option>
+            <option>rotation_period</option>
+            <option>surface_water</option>
+
+          </select>
+
+        </label>
+        <label htmlFor="comparison">
+          Comparison
+          <select
+            data-testid="comparison-filter"
+            id="comparison"
+            onChange={ (e) => setComparison(
+              e.target.value,
+            ) }
+            value={ comparison }
+          >
+            <option>maior que</option>
+            <option>menor que</option>
+            <option>igual a</option>
+          </select>
+          <label htmlFor="value">
+            Valor:
+            <input
+              data-testid="value-filter"
+              type="number"
+              id="value"
+              onChange={ (e) => setValue(
+                e.target.value,
+              ) }
+              value={ value }
+            />
+          </label>
+          <button
+            data-testid="button-filter"
+            type="button"
+            onClick={ () => handleClick(list) }
+          >
+            Filter
+          </button>
+
+        </label>
       </header>
       <table>
         <thead>
