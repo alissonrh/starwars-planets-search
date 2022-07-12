@@ -3,15 +3,19 @@ import context from '../context/myContext';
 
 function Table() {
   const MENOS_UM = -1;
+  const arrayColumn = ['population',
+    'orbital_period', 'diameter',
+    'rotation_period', 'surface_water'];
 
   const date = useContext(context);
 
   const [searchText, setSearchText] = useState('');
   const [list, setFilter] = useState();
-  const [filtes, setFilters] = useState([]);
+  const [filtersUsed, setFilters] = useState([]);
   const [column, setColumn] = useState('population');
   const [comparison, setComparison] = useState('maior que');
   const [value, setValue] = useState(0);
+  const [selectColumn, setSelectColumn] = useState(arrayColumn);
 
   useEffect(() => {
     if (searchText === '') {
@@ -24,27 +28,30 @@ function Table() {
     }
   }, [MENOS_UM, date, searchText]);
 
-  const handleClick = (listdate) => {
+  const handleClick = (listDate) => {
     switch (comparison) {
     case 'maior que':
-      setFilter(listdate
-        .filter((planet) => Number(planet[column]) > Number(value)));
+      setFilter(listDate
+        .filter((e) => Number(e[column]) > Number(value)));
       break;
     case 'menor que':
-      setFilter(listdate
-        .filter((planet) => Number(planet[column]) < Number(value)));
+      setFilter(listDate
+        .filter((e) => Number(e[column]) < Number(value)));
       break;
     default:
-      setFilter(listdate
-        .filter((planet) => Number(planet[column]) === Number(value)));
+      setFilter(listDate
+        .filter((e) => Number(e[column]) === Number(value)));
     }
     setFilters(
-      [...filtes, {
+      [...filtersUsed, {
         column,
         comparison,
         value,
       }],
     );
+    setSelectColumn([
+      ...selectColumn.filter((e) => e !== column),
+    ]);
   };
 
   return (
@@ -69,12 +76,16 @@ function Table() {
             ) }
             value={ column }
           >
-            <option>population</option>
-            <option>orbital_period</option>
-            <option>diameter</option>
-            <option>rotation_period</option>
-            <option>surface_water</option>
 
+            {selectColumn.map((e3) => <option key={ e3 }>{e3}</option>)}
+
+            {/*  {' '}
+            {console.log('filtersUsed', filtersUsed)}
+            {console.log('teste', arrayColumn.filter((e) => e !== filtersUsed
+              .forEach((e2) => e2.column)))}
+            { arrayColumn.filter((e) => e !== 'population')
+              .map((e3) => <option key={ e3 }>{e3}</option>) }
+ */}
           </select>
 
         </label>
