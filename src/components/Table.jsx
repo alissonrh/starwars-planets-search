@@ -8,7 +8,6 @@ function Table() {
     'rotation_period', 'surface_water'];
 
   const date = useContext(context);
-
   const [searchText, setSearchText] = useState('');
   const [list, setFilter] = useState();
   const [filtersUsed, setFilters] = useState([]);
@@ -17,31 +16,41 @@ function Table() {
   const [value, setValue] = useState(0);
   const [selectColumn, setSelectColumn] = useState(arrayColumn);
 
+  const filtering = () => {
+    let filterArray = [...date];
+    filtersUsed.forEach((element) => {
+      if (element.comparison === 'maior que') {
+        filterArray = filterArray
+          .filter((e) => Number(e[element.column]) > Number(element.value));
+      }
+      if (element.comparison === 'menor que') {
+        filterArray = filterArray
+          .filter((e) => Number(e[element.column]) < Number(element.value));
+      }
+      if (element.comparison === 'igual a') {
+        filterArray = filterArray
+          .filter((e) => Number(e[element.column]) === Number(element.value));
+      }
+    });
+    setFilter(filterArray);
+  };
+
   useEffect(() => {
-    if (searchText === '') {
+    if (searchText === '' && filtersUsed.length === 0) {
       setFilter(date);
-    } else {
+    }
+    if (searchText !== '') {
       setFilter(
         date.filter((e) => e.name.toLowerCase()
           .indexOf(searchText.toLowerCase()) > MENOS_UM),
       );
     }
-  }, [MENOS_UM, date, searchText]);
-
-  const handleClick = (listDate) => {
-    switch (comparison) {
-    case 'maior que':
-      setFilter(listDate
-        .filter((e) => Number(e[column]) > Number(value)));
-      break;
-    case 'menor que':
-      setFilter(listDate
-        .filter((e) => Number(e[column]) < Number(value)));
-      break;
-    default:
-      setFilter(listDate
-        .filter((e) => Number(e[column]) === Number(value)));
+    if (filtersUsed.length !== 0) {
+      filtering();
     }
+  }, [searchText, filtersUsed, date]);
+
+  const handleClick = () => {
     setFilters(
       [...filtersUsed, {
         column,
@@ -49,9 +58,17 @@ function Table() {
         value,
       }],
     );
+    const columnFiltered = selectColumn.filter((e) => e !== column);
     setSelectColumn([
-      ...selectColumn.filter((e) => e !== column),
+      ...columnFiltered,
     ]);
+    setColumn(columnFiltered[0]);
+  };
+
+  const handleClickDois = (eColumn) => {
+    setFilters(
+      filtersUsed.filter((e) => e.column !== eColumn),
+    );
   };
 
   return (
@@ -76,16 +93,7 @@ function Table() {
             ) }
             value={ column }
           >
-
             {selectColumn.map((e3) => <option key={ e3 }>{e3}</option>)}
-
-            {/*  {' '}
-            {console.log('filtersUsed', filtersUsed)}
-            {console.log('teste', arrayColumn.filter((e) => e !== filtersUsed
-              .forEach((e2) => e2.column)))}
-            { arrayColumn.filter((e) => e !== 'population')
-              .map((e3) => <option key={ e3 }>{e3}</option>) }
- */}
           </select>
 
         </label>
@@ -118,13 +126,38 @@ function Table() {
           <button
             data-testid="button-filter"
             type="button"
-            onClick={ () => handleClick(list) }
+            onClick={ () => handleClick() }
           >
             Filter
+          </button>
+          <button
+            data-testid="button-remove-filters"
+            type="button"
+            onClick={ () => setFilters([]) }
+          >
+            Delet Filters
           </button>
 
         </label>
       </header>
+      { filtersUsed.map((e) => (
+        <span
+          data-testid="filter"
+          key={ e.column }
+        >
+          {e.column}
+          {' '}
+          {e.comparison}
+          {' '}
+          {e.value}
+          <button
+            type="button"
+            onClick={ () => handleClickDois(e.column) }
+          >
+            X
+          </button>
+        </span>
+      ))}
       <table>
         <thead>
           <tr>
@@ -167,28 +200,6 @@ function Table() {
               </tr>
             ))}
           </tbody>)}
-        {/*   <tbody>
-      {state.map((e) => (
-        <tr key={ e.name }>
-          <td>{e.rotation_period}</td>
-          <td>{e.orbital_period}</td>
-          <td>{e.diameter}</td>
-          <td>{e.clumate}</td>
-          <td>{e.gravity}</td>
-          <td>{e.terrain}</td>
-          <td>{e.surface_water}</td>
-          <td>{e.population}</td>
-          <td>
-            {e.films.map((e2, index) => (
-              <p key={ index }>{e2}</p>
-            ))}
-          </td>
-          <td>{e.created}</td>
-          <td>{e.edited}</td>
-          <td>{e.url}</td>
-        </tr>
-      ))}
-    </tbody> */}
       </table>
 
     </>
