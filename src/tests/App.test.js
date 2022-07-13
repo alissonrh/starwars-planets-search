@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, } from '@testing-library/react';
+import { render, screen, waitFor, } from '@testing-library/react';
 import App from '../App';
 import testData from '../../cypress/mocks/testData'
 import userEvent from '@testing-library/user-event';
@@ -167,6 +167,78 @@ describe('cobertura de testes do projeto StarWars', () => {
     expect(document.getElementsByTagName('tr')).toHaveLength(6);
     userEvent.click(screen.getAllByRole('button', {  name: /x/i})[0])
     expect(document.getElementsByTagName('tr')).toHaveLength(6);
+  })
+
+  test('Verifique a ordenação inicial', async () => {
+    /* const expectedPlanets = ['Alderaan', 'Bespin', 'Coruscant', 'Dagobah', 'Endor', 'Hoth', 'Kamino', 'Naboo', 'Tatooine', 'Yavin IV']; */
+
+
+
+    /* planetsName.forEach((el, index) => {
+      console.log(el, index);
+      expect(el).toHaveTextContent(expectedPlanets[index]);
+    }); */
+    await waitFor(() => {
+      const planetsName = screen.getAllByTestId('planet-name')
+      expect(planetsName).toHaveLength(10)
+      expect(planetsName[0]).toHaveTextContent('Alderaan');
+      expect(planetsName[1]).toHaveTextContent('Bespin');
+      expect(planetsName[2]).toHaveTextContent('Coruscant');
+      expect(planetsName[3]).toHaveTextContent('Dagobah');
+      expect(planetsName[4]).toHaveTextContent('Endor');
+      expect(planetsName[5]).toHaveTextContent('Hoth');
+      expect(planetsName[6]).toHaveTextContent('Kamino');
+      expect(planetsName[7]).toHaveTextContent('Naboo');
+      expect(planetsName[8]).toHaveTextContent('Tatooine');
+      expect(planetsName[9]).toHaveTextContent('Yavin IV');
+     /*  planetsName.forEach((el, index) => {
+        expect(el).toHaveTextContent(expectedPlanets.forEach((e) => e[index]));
+      }) */
+    })
+  });
+
+  test('Ordene os planetas do maior período orbital para o menor período orbital', async () => {
+
+    userEvent.selectOptions(screen.getByTestId('column-sort'), 'orbital_period')
+      userEvent.click(screen.getByTestId('column-sort-input-desc'))
+      userEvent.click(screen.getByTestId('column-sort-button'))
+
+    await waitFor(() => {
+      
+      const planetsName = screen.getAllByTestId('planet-name')
+      expect(planetsName[0]).toHaveTextContent('Bespin');
+      expect(planetsName[1]).toHaveTextContent('Yavin IV');
+      expect(planetsName[2]).toHaveTextContent('Hoth');
+      expect(planetsName[3]).toHaveTextContent('Kamino');
+      expect(planetsName[4]).toHaveTextContent('Endor');
+      expect(planetsName[5]).toHaveTextContent('Coruscant');
+      expect(planetsName[6]).toHaveTextContent('Alderaan');
+      expect(planetsName[7]).toHaveTextContent('Dagobah');
+      expect(planetsName[8]).toHaveTextContent('Naboo');
+      expect(planetsName[9]).toHaveTextContent('Tatooine');
+    })
+  })
+
+  test('Ordene os planetas do menor diâmetro para o maior diâmetro', async () => {
+
+    userEvent.selectOptions(screen.getByTestId('column-sort'), 'diameter')
+      userEvent.click(screen.getByTestId('column-sort-input-asc'))
+      userEvent.click(screen.getByTestId('column-sort-button'))
+
+    await waitFor(() => {
+      
+      const planetsName = screen.getAllByTestId('planet-name')
+      expect(planetsName[0]).toHaveTextContent('Endor');
+      expect(planetsName[1]).toHaveTextContent('Hoth');
+      expect(planetsName[2]).toHaveTextContent('Dagobah');
+      expect(planetsName[3]).toHaveTextContent('Yavin IV');
+      expect(planetsName[4]).toHaveTextContent('Tatooine');
+      expect(planetsName[5]).toHaveTextContent('Naboo');
+      expect(planetsName[6]).toHaveTextContent('Coruscant');
+      expect(planetsName[7]).toHaveTextContent('Alderaan');
+      expect(planetsName[8]).toHaveTextContent('Kamino');
+      expect(planetsName[9]).toHaveTextContent('Bespin');
+    })
   })
 })
 

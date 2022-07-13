@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import React, { useContext, useState, useEffect } from 'react';
 import context from '../context/myContext';
 
@@ -7,12 +8,13 @@ function Table() {
     'orbital_period', 'diameter',
     'rotation_period', 'surface_water'];
 
-  /* const order = {
+  const order = {
     column: '',
     sort: '',
-  }; */
+  };
 
   const date = useContext(context);
+
   const [searchText, setSearchText] = useState('');
   const [list, setFilter] = useState();
   const [filtersUsed, setFilters] = useState([]);
@@ -20,8 +22,8 @@ function Table() {
   const [comparison, setComparison] = useState('maior que');
   const [value, setValue] = useState(0);
   const [selectColumn, setSelectColumn] = useState(arrayColumn);
-  /* const [columnSort, setColumnSort] = useState(order);
- */
+  const [columnSort, setColumnSort] = useState(order);
+
   const filtering = () => {
     let filterArray = [...date];
     filtersUsed.forEach((element) => {
@@ -77,16 +79,23 @@ function Table() {
     );
   };
 
-  /*   const handleClickOrderFilter = () => {
-    console.log(list);
-    setFilter(
-      list.sort((a, b) => {
-        if (a.name < b.name) return MENOS_UM;
-        if (a.name > b.name) return 1;
-        return 0;
-      }),
-    );
-  }; */
+  const handleClickOrderFilter = () => {
+    const sortedArray = [...list];
+    if (columnSort.sort === 'ASC') {
+      sortedArray.sort((a, b) => {
+        if (a[columnSort.column] === 'unknown') return 1;
+        if (b[columnSort.column] === 'unknown') return MENOS_UM;
+        return a[columnSort.column] - b[columnSort.column];
+      });
+    } else {
+      sortedArray.sort((a, b) => {
+        if (a[columnSort.column] === 'unknown') return 1;
+        if (b[columnSort.column] === 'unknown') return MENOS_UM;
+        return b[columnSort.column] - a[columnSort.column];
+      });
+    }
+    setFilter(sortedArray);
+  };
 
   return (
     <>
@@ -179,6 +188,51 @@ function Table() {
           </button>
         </span>
       ))}
+      Order
+      <select
+        data-testid="column-sort"
+        onChange={ (e) => setColumnSort(
+          { ...columnSort,
+            column: e.target.value,
+          },
+        ) }
+        value={ columnSort.column }
+      >
+        {selectColumn.map((e) => <option key={ e }>{e}</option>)}
+      </select>
+      <div
+        onChange={ (e) => setColumnSort(
+          { ...columnSort,
+            sort: e.target.value,
+          },
+
+        ) }
+        value={ columnSort.sort }
+      >
+        <input
+          type="radio"
+          data-testid="column-sort-input-asc"
+          value="ASC"
+          name="sort"
+        />
+        {' '}
+        ASC
+        <input
+          type="radio"
+          data-testid="column-sort-input-desc"
+          value="DESC"
+          name="sort"
+        />
+        {' '}
+        DESC
+      </div>
+      <button
+        data-testid="column-sort-button"
+        type="button"
+        onClick={ handleClickOrderFilter }
+      >
+        Ordernar
+      </button>
       <table>
         <thead>
           <tr>

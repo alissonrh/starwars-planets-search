@@ -2,9 +2,8 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import MyContext from './myContext';
 
-/* const INITIAL_STATE = { nome: 'Xablau', idade: 100 }; */
-
 function Provider({ children }) {
+  const MENOS_UM = -1;
   const [state, setState] = useState();
 
   const deleteKey = (data) => {
@@ -20,7 +19,12 @@ function Provider({ children }) {
         .then((response) => response.json())
         .then((data) => {
           const returnDele = deleteKey(data.results);
-          setState(returnDele);
+          const sortDate = returnDele.sort((a, b) => {
+            if (a.name < b.name) return MENOS_UM;
+            if (a.name > b.name) return 1;
+            return 0;
+          });
+          setState(sortDate);
         })
         .catch((error) => {
           setState({
@@ -30,6 +34,10 @@ function Provider({ children }) {
     };
     getPlanets();
   }, []);
+
+  /* const contextValue {
+    state: date,
+  } */
 
   return (
     <MyContext.Provider value={ state }>
