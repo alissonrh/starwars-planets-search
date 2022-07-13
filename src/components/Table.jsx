@@ -7,6 +7,11 @@ function Table() {
     'orbital_period', 'diameter',
     'rotation_period', 'surface_water'];
 
+  /* const order = {
+    column: '',
+    sort: '',
+  }; */
+
   const date = useContext(context);
   const [searchText, setSearchText] = useState('');
   const [list, setFilter] = useState();
@@ -15,7 +20,8 @@ function Table() {
   const [comparison, setComparison] = useState('maior que');
   const [value, setValue] = useState(0);
   const [selectColumn, setSelectColumn] = useState(arrayColumn);
-
+  /* const [columnSort, setColumnSort] = useState(order);
+ */
   const filtering = () => {
     let filterArray = [...date];
     filtersUsed.forEach((element) => {
@@ -65,21 +71,36 @@ function Table() {
     setColumn(columnFiltered[0]);
   };
 
-  const handleClickDois = (eColumn) => {
+  const handleClickFilter = (eColumn) => {
     setFilters(
       filtersUsed.filter((e) => e.column !== eColumn),
     );
   };
 
+  /*   const handleClickOrderFilter = () => {
+    console.log(list);
+    setFilter(
+      list.sort((a, b) => {
+        if (a.name < b.name) return MENOS_UM;
+        if (a.name > b.name) return 1;
+        return 0;
+      }),
+    );
+  }; */
+
   return (
     <>
       <header>
-        <input
-          type="text"
-          value={ searchText }
-          data-testid="name-filter"
-          onChange={ (e) => setSearchText(e.target.value) }
-        />
+        <label htmlFor="textFilter">
+          Pesquisar por nome:
+          <input
+            id="textFilter"
+            type="text"
+            value={ searchText }
+            data-testid="name-filter"
+            onChange={ (e) => setSearchText(e.target.value) }
+          />
+        </label>
 
       </header>
       <header>
@@ -95,8 +116,8 @@ function Table() {
           >
             {selectColumn.map((e3) => <option key={ e3 }>{e3}</option>)}
           </select>
-
         </label>
+
         <label htmlFor="comparison">
           Comparison
           <select
@@ -111,34 +132,34 @@ function Table() {
             <option>menor que</option>
             <option>igual a</option>
           </select>
-          <label htmlFor="value">
-            Valor:
-            <input
-              data-testid="value-filter"
-              type="number"
-              id="value"
-              onChange={ (e) => setValue(
-                e.target.value,
-              ) }
-              value={ value }
-            />
-          </label>
-          <button
-            data-testid="button-filter"
-            type="button"
-            onClick={ () => handleClick() }
-          >
-            Filter
-          </button>
-          <button
-            data-testid="button-remove-filters"
-            type="button"
-            onClick={ () => setFilters([]) }
-          >
-            Delet Filters
-          </button>
-
         </label>
+
+        <label htmlFor="value">
+          Valor:
+          <input
+            data-testid="value-filter"
+            type="number"
+            id="value"
+            onChange={ (e) => setValue(
+              e.target.value,
+            ) }
+            value={ value }
+          />
+        </label>
+        <button
+          data-testid="button-filter"
+          type="button"
+          onClick={ () => handleClick() }
+        >
+          Filter
+        </button>
+        <button
+          data-testid="button-remove-filters"
+          type="button"
+          onClick={ () => setFilters([]) }
+        >
+          Delet Filters
+        </button>
       </header>
       { filtersUsed.map((e) => (
         <span
@@ -152,7 +173,7 @@ function Table() {
           {e.value}
           <button
             type="button"
-            onClick={ () => handleClickDois(e.column) }
+            onClick={ () => handleClickFilter(e.column) }
           >
             X
           </button>
@@ -180,7 +201,7 @@ function Table() {
           <tbody>
             {list.map((e) => (
               <tr key={ e.name }>
-                <td>{e.name}</td>
+                <td data-testid="planet-name">{e.name}</td>
                 <td>{e.rotation_period}</td>
                 <td>{e.orbital_period}</td>
                 <td>{e.diameter}</td>
@@ -201,7 +222,6 @@ function Table() {
             ))}
           </tbody>)}
       </table>
-
     </>
   );
 }
