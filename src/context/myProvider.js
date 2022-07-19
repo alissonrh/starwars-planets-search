@@ -4,30 +4,32 @@ import MyContext from './myContext';
 
 function Provider({ children }) {
   const MENOS_UM = -1;
-  const [state, setState] = useState();
+  const [data, setData] = useState([]);
+  const [list, setList] = useState();
+  /*   const [searchText, setSearchText] = useState(''); */
 
-  const deleteKey = (data) => {
-    data.forEach((element) => {
+  const deleteKey = (fetchApi) => {
+    fetchApi.forEach((element) => {
       delete element.residents;
     });
-    return data;
+    return fetchApi;
   };
 
   useEffect(() => {
     const getPlanets = () => {
       fetch('https://swapi-trybe.herokuapp.com/api/planets/')
         .then((response) => response.json())
-        .then((data) => {
-          const returnDele = deleteKey(data.results);
-          const sortDate = returnDele.sort((a, b) => {
+        .then((fetchApi) => {
+          const returnFetchApi = deleteKey(fetchApi.results);
+          const sortFetchApi = returnFetchApi.sort((a, b) => {
             if (a.name < b.name) return MENOS_UM;
             if (a.name > b.name) return 1;
             return 0;
           });
-          setState(sortDate);
+          setData(sortFetchApi);
         })
         .catch((error) => {
-          setState({
+          setData({
             error,
           });
         });
@@ -35,12 +37,15 @@ function Provider({ children }) {
     getPlanets();
   }, []);
 
-  /* const contextValue {
-    state: date,
-  } */
+  const contextValue = {
+    data,
+    setData,
+    list,
+    setList,
+  };
 
   return (
-    <MyContext.Provider value={ state }>
+    <MyContext.Provider value={ contextValue }>
       {children}
     </MyContext.Provider>
   );

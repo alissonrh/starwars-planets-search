@@ -15,49 +15,6 @@ describe('cobertura de testes do projeto StarWars', () => {
   });
   afterEach(() => jest.clearAllMocks());
 
-  test('verifica se a API foi chamada', () => {
-    const URL = 'https://swapi-trybe.herokuapp.com/api/planets/';
-
-    expect(fetch).toBeCalled();
-    expect(fetch).toHaveBeenCalledTimes(1);
-    expect(fetch).toBeCalledWith(URL);
-  })
-
-  test('Testa inputs', () => {
-
-    expect(screen.getByTestId('name-filter')).toBeInTheDocument();
-    expect(screen.getByTestId('column-filter')).toBeInTheDocument();
-    expect(screen.getByTestId('comparison-filter')).toBeInTheDocument();
-    expect(screen.getByTestId('value-filter')).toBeInTheDocument();
-    expect(screen.getByTestId('button-filter')).toBeInTheDocument();
-  });
-
-  test('verifica o tamanho da tabebela', () => {
-    const thead = document.getElementsByTagName('th')
-    expect(thead).toHaveLength(13)
-  })
-
-  test('verifica se filtar planetas com a letra "a" dó eles aparecem', () => {
-    const inputText = screen.getByRole('textbox', { name: /pesquisar por nome:/i })
-    userEvent.type(inputText, 'a')
-
-    expect(document.getElementsByTagName('tr')).toHaveLength(8);
-
-  });
-
-  test('verifica se ao realizar uma filtragem em sequencia e depois o campo de input remove o filtro por inteiro', () => {
-    const inputText = screen.getByRole('textbox', { name: /pesquisar por nome:/i })
-    
-    userEvent.type(inputText, 'a')
-    expect(document.getElementsByTagName('tr')).toHaveLength(8);
-
-    userEvent.type(inputText, 'al')
-    expect(document.getElementsByTagName('tr')).toHaveLength(1);
-
-    userEvent.clear(inputText)
-    expect(document.getElementsByTagName('tr')).toHaveLength(11);
-  })
-
   test('verifica se o operador "menor que" funciona', () => {
    const comparison = screen.getByRole('combobox', {
       name: /comparison/i
@@ -105,35 +62,32 @@ describe('cobertura de testes do projeto StarWars', () => {
     expect(rowsEl).toHaveLength(2);
   })
 
-  test('Verifica se a tabela foi atualizada com as informações filtrada com 2 filtros', () => {
+  test('verifica se o botão de excluir filtro funciona', () => {
 
     const columnEl = screen.getByRole('combobox', {
       name: /column/i
     })
-    userEvent.selectOptions(columnEl, 'rotation_period')
+    userEvent.selectOptions(columnEl, 'diameter')
 
     const comparisonEl = screen.getByRole('combobox', {
       name: /comparison/i
     })
-    userEvent.selectOptions(comparisonEl, 'maior que')
+    userEvent.selectOptions(comparisonEl, 'igual a')
 
     const inputValueEl = screen.getByRole('spinbutton', {
       name: /valor:/i
     })
-    userEvent.type(inputValueEl, '20');
+    userEvent.type(inputValueEl, '12500');
 
     const btnValueEl = screen.getByTestId('button-filter')
     userEvent.click(btnValueEl);
 
-    const rowsEl = screen.getAllByRole('row');
-    expect(rowsEl).toHaveLength(9);
 
-    userEvent.selectOptions(columnEl, 'orbital_period')
-    userEvent.selectOptions(comparisonEl, 'menor que')
-    userEvent.clear(inputValueEl)
-    userEvent.type(inputValueEl, '400');
-    userEvent.click(btnValueEl);
-    expect(document.getElementsByTagName('tr')).toHaveLength(6);
+    const btnDeletFilter = screen.getByRole('button', {  name: /x/i});
+    userEvent.click(btnDeletFilter);
+    const rowsEl = screen.getAllByRole('row');
+    expect(rowsEl).toHaveLength(11);
+
   })
 
   test('Verifica se a tabela foi atualizada com as informações filtrada com 2 filtros', () => {
@@ -165,19 +119,37 @@ describe('cobertura de testes do projeto StarWars', () => {
     userEvent.type(inputValueEl, '400');
     userEvent.click(btnValueEl);
     expect(document.getElementsByTagName('tr')).toHaveLength(6);
-    userEvent.click(screen.getAllByRole('button', {  name: /x/i})[0])
-    expect(document.getElementsByTagName('tr')).toHaveLength(6);
+  })
+
+
+  test('Verifica se a tabela foi atualizada com as informações filtrada após remover todos os filtros', () => {
+
+    const columnEl = screen.getByRole('combobox', {
+      name: /column/i
+    })
+    userEvent.selectOptions(columnEl, 'surface_water')
+
+    const comparisonEl = screen.getByRole('combobox', {
+      name: /comparison/i
+    })
+    userEvent.selectOptions(comparisonEl, 'maior que')
+
+    const inputValueEl = screen.getByRole('spinbutton', {
+      name: /valor:/i
+    })
+    userEvent.type(inputValueEl, '10');
+
+    const btnValueEl = screen.getByTestId('button-filter')
+    userEvent.click(btnValueEl);
+
+    const rowsEl = screen.getAllByRole('row');
+    expect(rowsEl).toHaveLength(5);
+
+    userEvent.click(screen.getByTestId("button-remove-filters"));
+    expect(document.getElementsByTagName('tr')).toHaveLength(11);
   })
 
   test('Verifique a ordenação inicial', async () => {
-    /* const expectedPlanets = ['Alderaan', 'Bespin', 'Coruscant', 'Dagobah', 'Endor', 'Hoth', 'Kamino', 'Naboo', 'Tatooine', 'Yavin IV']; */
-
-
-
-    /* planetsName.forEach((el, index) => {
-      console.log(el, index);
-      expect(el).toHaveTextContent(expectedPlanets[index]);
-    }); */
     await waitFor(() => {
       const planetsName = screen.getAllByTestId('planet-name')
       expect(planetsName).toHaveLength(10)
@@ -191,9 +163,7 @@ describe('cobertura de testes do projeto StarWars', () => {
       expect(planetsName[7]).toHaveTextContent('Naboo');
       expect(planetsName[8]).toHaveTextContent('Tatooine');
       expect(planetsName[9]).toHaveTextContent('Yavin IV');
-     /*  planetsName.forEach((el, index) => {
-        expect(el).toHaveTextContent(expectedPlanets.forEach((e) => e[index]));
-      }) */
+
     })
   });
 
@@ -238,6 +208,35 @@ describe('cobertura de testes do projeto StarWars', () => {
       expect(planetsName[7]).toHaveTextContent('Alderaan');
       expect(planetsName[8]).toHaveTextContent('Kamino');
       expect(planetsName[9]).toHaveTextContent('Bespin');
+    })
+  })
+
+  test('o ultimo é unknown', async () => {
+
+    userEvent.selectOptions(screen.getByTestId('column-sort'), 'surface_water')
+      userEvent.click(screen.getByTestId('column-sort-input-asc'))
+      userEvent.click(screen.getByTestId('column-sort-button'))
+
+    await waitFor(() => {
+      
+      const planetsName = screen.getAllByTestId('planet-name')
+
+      expect(planetsName[9]).toHaveTextContent('Coruscant');
+    })
+  })
+
+  test('os dois ultimos são unknown', async () => {
+
+    userEvent.selectOptions(screen.getByTestId('column-sort'), 'population')
+      userEvent.click(screen.getByTestId('column-sort-input-desc'))
+      userEvent.click(screen.getByTestId('column-sort-button'))
+
+    await waitFor(() => {
+      
+      const planetsName = screen.getAllByTestId('planet-name')
+
+      expect(planetsName[8]).toHaveTextContent('Dagobah');
+      expect(planetsName[9]).toHaveTextContent('Hoth');
     })
   })
 })
