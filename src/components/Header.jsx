@@ -1,6 +1,7 @@
 /* eslint-disable max-lines */
 import React, { useEffect, useContext, useState } from 'react';
 import context from '../context/myContext';
+import logo from '../LogoSW.webp';
 
 function Header() {
   const MENOS_UM = -1;
@@ -77,15 +78,20 @@ function Header() {
   };
 
   const handleClickOrderFilter = () => {
+    console.log('entrou');
     const sortedArray = [...data];
     if (columnSort.sort === 'ASC') {
       sortedArray.sort((a, b) => {
+        console.log('ASC');
         if (a[columnSort.column] === 'unknown') return 1;
         if (b[columnSort.column] === 'unknown') return MENOS_UM;
         return a[columnSort.column] - b[columnSort.column];
       });
     } else {
+      console.log('DESC');
       sortedArray.sort((a, b) => {
+        console.log('a', a);
+        console.log('b', b);
         if (a[columnSort.column] === 'unknown') return 1;
         if (b[columnSort.column] === 'unknown') return MENOS_UM;
         return b[columnSort.column] - a[columnSort.column];
@@ -95,17 +101,27 @@ function Header() {
   };
 
   return (
-    <header className="bg-gray-700 p-4 text-white">
+    <header className="bg-fundo-escuro p-4 text-white">
       <div
-        className="bg-gray-700 p-4 h-20 flex justify-between items-center"
+        className="flex justify-center"
+      >
+        <img
+          src={ logo }
+          alt="logo"
+          width={ 300 }
+        />
+      </div>
+      <div
+        className="bg-fundo-escuro p-4 h-20 flex justify-between items-center"
       >
         <label htmlFor="textFilter">
           Pesquisar por nome:
           <input
-            className="shadow-md appearance-none border border-yellow-400
+            className="shadow-md appearance-none border border-amarelo-sw
           rounded w-full py-2 px-3 text-white
-           mt-1.5 mb-3 leading-tight bg-slate-700 focus:outline-none focus:shadow-outline
-           focus:border focus:border-yellow-400"
+           mt-1.5 mb-3 leading-tight bg-fundo-escuro
+           focus:outline-none focus:shadow-outline
+           focus:border focus:border-amarelo-sw"
             id="textFilter"
             type="text"
             value={ searchText }
@@ -117,10 +133,11 @@ function Header() {
         <label htmlFor="column">
           Column:
           <select
-            className="shadow-md border border-yellow-400
+            className="shadow-md border border-amarelo-sw
           rounded w-full py-2 px-3
-           mt-1.5 mb-3 leading-tight bg-slate-700 focus:outline-none focus:shadow-outline
-          focus:border focus:border-yellow-400"
+           mt-1.5 mb-3 leading-tight bg-fundo-escuro
+           ocus:outline-none focus:shadow-outline
+          focus:border focus:border-amarelo-sw"
             data-testid="column-filter"
             id="column"
             onChange={ (e) => setColumn(
@@ -134,8 +151,8 @@ function Header() {
         <label htmlFor="comparison">
           Comparison:
           <select
-            className="shadow-md border border-yellow-400
-          rounded w-full py-2 px-3 mt-1.5 mb-3 leading-tight bg-slate-700
+            className="shadow-md border border-amarelo-sw
+          rounded w-full py-2 px-3 mt-1.5 mb-3 leading-tight bg-fundo-escuro
           focus:outline-none focus:shadow-outline
           focus:border focus:border-verde-claro"
             data-testid="comparison-filter"
@@ -153,10 +170,11 @@ function Header() {
         <label htmlFor="value">
           Valor:
           <input
-            className="shadow-md appearance-none border border-yellow-400
+            className="shadow-md appearance-none border border-amarelo-sw
           rounded w-full py-2 px-3 text-white
-           mt-1.5 mb-3 leading-tight bg-slate-700 focus:outline-none focus:shadow-outline
-           focus:border focus:border-yellow-400"
+           mt-1.5 mb-3 leading-tight bg-fundo-escuro
+           focus:outline-none focus:shadow-outline
+           focus:border focus:border-amarelo-sw"
             data-testid="value-filter"
             type="number"
             id="value"
@@ -168,7 +186,7 @@ function Header() {
         </label>
 
         <button
-          className="my-3 bg-yellow-400 text-white p-1.5
+          className="my-3 bg-amarelo-sw text-white p-1.5
           h-16 text-center rounded text-black w-16"
           data-testid="button-filter"
           type="button"
@@ -196,27 +214,25 @@ function Header() {
         </p>
       ))}
       <div
-        className="bg-gray-700 p-4 h-20 flex justify-between items-center ml-48 mr-48"
+        className="bg-fundo-escuro p-4 h-20 flex justify-between items-center ml-48 mr-48"
       >
         <label htmlFor="order">
           Order
           <select
-            className="shadow-md border border-yellow-400
-      rounded w-full py-2 px-3 bg-slate-700
+            className="shadow-md border border-amarelo-sw
+      rounded w-full py-2 px-3 bg-fundo-escuro
       text-white mt-1.5 mb-3 leading-tight
       focus:outline-none focus:shadow-outline
       focus:border focus:border-verde-claro"
             id="order"
-          >
-            {(e) => setColumnSort(
+            onChange={ (e) => setColumnSort(
               {
                 ...columnSort,
                 column: e.target.value,
               },
-            )}
-            value =
-            {' '}
-            {columnSort.column}
+            ) }
+            value={ columnSort.column }
+          >
             {selectColumn.map((e) => <option key={ e }>{e}</option>)}
           </select>
         </label>
@@ -254,7 +270,7 @@ function Header() {
 
         </div>
         <button
-          className="my-3 bg-yellow-400 text-white p-1.5
+          className="my-3 bg-amarelo-sw text-white p-1.5
         h-16 text-center rounded text-black"
           data-testid="column-sort-button"
           type="button"
@@ -263,7 +279,7 @@ function Header() {
           Ordernar
         </button>
         <button
-          className="my-3 bg-yellow-400 text-white p-1.5
+          className="my-3 bg-amarelo-sw text-white p-1.5
         h-16 text-center rounded text-black"
           data-testid="button-remove-filters"
           type="button"
