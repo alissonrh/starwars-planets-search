@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import React, { useEffect, useContext, useState } from 'react';
 import context from '../context/myContext';
 
@@ -94,11 +95,17 @@ function Header() {
   };
 
   return (
-    <>
-      <header>
+    <header className="bg-gray-700 p-4 text-white">
+      <div
+        className="bg-gray-700 p-4 h-20 flex justify-between items-center"
+      >
         <label htmlFor="textFilter">
           Pesquisar por nome:
           <input
+            className="shadow-md appearance-none border border-yellow-400
+          rounded w-full py-2 px-3 text-white
+           mt-1.5 mb-3 leading-tight bg-slate-700 focus:outline-none focus:shadow-outline
+           focus:border focus:border-yellow-400"
             id="textFilter"
             type="text"
             value={ searchText }
@@ -106,11 +113,14 @@ function Header() {
             onChange={ (e) => setSearchText(e.target.value) }
           />
         </label>
-      </header>
-      <header>
+
         <label htmlFor="column">
-          Column
+          Column:
           <select
+            className="shadow-md border border-yellow-400
+          rounded w-full py-2 px-3
+           mt-1.5 mb-3 leading-tight bg-slate-700 focus:outline-none focus:shadow-outline
+          focus:border focus:border-yellow-400"
             data-testid="column-filter"
             id="column"
             onChange={ (e) => setColumn(
@@ -121,10 +131,13 @@ function Header() {
             {selectColumn.map((e3) => <option key={ e3 }>{e3}</option>)}
           </select>
         </label>
-
         <label htmlFor="comparison">
-          Comparison
+          Comparison:
           <select
+            className="shadow-md border border-yellow-400
+          rounded w-full py-2 px-3 mt-1.5 mb-3 leading-tight bg-slate-700
+          focus:outline-none focus:shadow-outline
+          focus:border focus:border-verde-claro"
             data-testid="comparison-filter"
             id="comparison"
             onChange={ (e) => setComparison(
@@ -137,10 +150,13 @@ function Header() {
             <option>igual a</option>
           </select>
         </label>
-
         <label htmlFor="value">
           Valor:
           <input
+            className="shadow-md appearance-none border border-yellow-400
+          rounded w-full py-2 px-3 text-white
+           mt-1.5 mb-3 leading-tight bg-slate-700 focus:outline-none focus:shadow-outline
+           focus:border focus:border-yellow-400"
             data-testid="value-filter"
             type="number"
             id="value"
@@ -150,23 +166,19 @@ function Header() {
             value={ value }
           />
         </label>
+
         <button
+          className="my-3 bg-yellow-400 text-white p-1.5
+          h-16 text-center rounded text-black w-16"
           data-testid="button-filter"
           type="button"
           onClick={ () => handleClick() }
         >
           Filter
         </button>
-        <button
-          data-testid="button-remove-filters"
-          type="button"
-          onClick={ () => setFilters([]) }
-        >
-          Delet Filters
-        </button>
-      </header>
-      { filtersUsed.map((e) => (
-        <span
+      </div>
+      {filtersUsed?.map((e) => (
+        <p
           data-testid="filter"
           key={ e.column }
         >
@@ -181,53 +193,87 @@ function Header() {
           >
             X
           </button>
-        </span>
+        </p>
       ))}
-      Order
-      <select
-        data-testid="column-sort"
-        onChange={ (e) => setColumnSort(
-          { ...columnSort,
-            column: e.target.value,
-          },
-        ) }
-        value={ columnSort.column }
-      >
-        {selectColumn.map((e) => <option key={ e }>{e}</option>)}
-      </select>
       <div
-        onChange={ (e) => setColumnSort(
-          { ...columnSort,
-            sort: e.target.value,
-          },
-        ) }
-        value={ columnSort.sort }
+        className="bg-gray-700 p-4 h-20 flex justify-between items-center ml-48 mr-48"
       >
-        <input
-          type="radio"
-          data-testid="column-sort-input-asc"
-          value="ASC"
-          name="sort"
-        />
-        {' '}
-        ASC
-        <input
-          type="radio"
-          data-testid="column-sort-input-desc"
-          value="DESC"
-          name="sort"
-        />
-        {' '}
-        DESC
+        <label htmlFor="order">
+          Order
+          <select
+            className="shadow-md border border-yellow-400
+      rounded w-full py-2 px-3 bg-slate-700
+      text-white mt-1.5 mb-3 leading-tight
+      focus:outline-none focus:shadow-outline
+      focus:border focus:border-verde-claro"
+            id="order"
+          >
+            {(e) => setColumnSort(
+              {
+                ...columnSort,
+                column: e.target.value,
+              },
+            )}
+            value =
+            {' '}
+            {columnSort.column}
+            {selectColumn.map((e) => <option key={ e }>{e}</option>)}
+          </select>
+        </label>
+
+        <div
+          className="flex flex-col"
+          onChange={ (e) => setColumnSort(
+            {
+              ...columnSort,
+              sort: e.target.value,
+            },
+          ) }
+          value={ columnSort.sort }
+        >
+          <div>
+            <input
+              type="radio"
+              data-testid="column-sort-input-asc"
+              value="ASC"
+              name="sort"
+            />
+            {' '}
+            ASC
+          </div>
+          <div>
+            <input
+              type="radio"
+              data-testid="column-sort-input-desc"
+              value="DESC"
+              name="sort"
+            />
+            {' '}
+            DESC
+          </div>
+
+        </div>
+        <button
+          className="my-3 bg-yellow-400 text-white p-1.5
+        h-16 text-center rounded text-black"
+          data-testid="column-sort-button"
+          type="button"
+          onClick={ handleClickOrderFilter }
+        >
+          Ordernar
+        </button>
+        <button
+          className="my-3 bg-yellow-400 text-white p-1.5
+        h-16 text-center rounded text-black"
+          data-testid="button-remove-filters"
+          type="button"
+          onClick={ () => setFilters([]) }
+        >
+          Delet Filters
+        </button>
       </div>
-      <button
-        data-testid="column-sort-button"
-        type="button"
-        onClick={ handleClickOrderFilter }
-      >
-        Ordernar
-      </button>
-    </>
+
+    </header>
   );
 }
 

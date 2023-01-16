@@ -3,6 +3,7 @@ import context from '../context/myContext';
 
 function Table() {
   const { list } = useContext(context);
+  console.log(list);
 
   return (
     <table>
@@ -18,12 +19,9 @@ function Table() {
           <th>Surface Water</th>
           <th>Population</th>
           <th>Films</th>
-          <th>Created</th>
-          <th>Edited</th>
-          <th>URL</th>
         </tr>
       </thead>
-      {list !== undefined && (
+      {list && (
         <tbody>
           {list.map((e) => (
             <tr key={ e.name }>
@@ -37,13 +35,8 @@ function Table() {
               <td>{e.surface_water}</td>
               <td>{e.population}</td>
               <td>
-                {e.films.map((e2, index) => (
-                  <p key={ index }>{e2}</p>
-                ))}
+                {e.films.map((film, i) => <p key={ i }>{film}</p>)}
               </td>
-              <td>{e.created}</td>
-              <td>{e.edited}</td>
-              <td>{e.url}</td>
             </tr>
           ))}
         </tbody>)}

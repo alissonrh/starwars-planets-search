@@ -16,7 +16,7 @@ describe('cobertura de testes do projeto StarWars', () => {
   afterEach(() => jest.clearAllMocks());
 
   test('verifica se a API foi chamada', () => {
-    const URL = 'https://swapi-trybe.herokuapp.com/api/planets/';
+    const URL = 'https://swapi.dev/api/planets';
 
     expect(fetch).toBeCalled();
     expect(fetch).toHaveBeenCalledTimes(1);

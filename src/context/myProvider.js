@@ -17,7 +17,7 @@ function Provider({ children }) {
 
   useEffect(() => {
     const getPlanets = () => {
-      fetch('https://swapi-trybe.herokuapp.com/api/planets/')
+      fetch('https://swapi.dev/api/planets')
         .then((response) => response.json())
         .then((fetchApi) => {
           const returnFetchApi = deleteKey(fetchApi.results);
@@ -25,6 +25,18 @@ function Provider({ children }) {
             if (a.name < b.name) return MENOS_UM;
             if (a.name > b.name) return 1;
             return 0;
+          });
+          sortFetchApi.forEach((planet) => {
+            planet.films.forEach(async (link, i) => {
+              await fetch(link)
+                .then((response) => response.json())
+                .then((film) => {
+                  planet.films[i] = film.title;
+                })
+                .catch((error) => {
+                  console.log('Error:', error);
+                });
+            });
           });
           setData(sortFetchApi);
         })
