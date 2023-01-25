@@ -1,10 +1,14 @@
-# :construction: README em construção ! :construction:
-<!-- Olá, Tryber!
-Esse é apenas um arquivo inicial para o README do seu projeto.
-É essencial que você preencha esse documento por conta própria, ok?
-Não deixe de usar nossas dicas de escrita de README de projetos, e deixe sua criatividade brilhar!
-:warning: IMPORTANTE: você precisa deixar nítido:
-- quais arquivos/pastas foram desenvolvidos por você; 
-- quais arquivos/pastas foram desenvolvidos por outra pessoa estudante;
-- quais arquivos/pastas foram desenvolvidos pela Trybe.
--->
+<h1 align="center">Star Wars Planets Search</h1>
+
+## Descrição
+
+O Projeto Star Wars Planets Search é uma lista de planetas do universo de Star Wars usando **Context API** e **Hooks** para controlar os estados globais. Nele, há diversos filtros. Como pesquisa por Nome, comparação e ordenações.  
+
+
+## Tecnologias e Ferramentas
+
+Este projeto foi desenvolvido com `React`. Para o gerenciamento de estado foi usado `Context API`. Para estilização da página a biblioteca `Tailwind`.
+
+## Preview 
+
+Para ver e interagir com o projeto [clique aqui](https://starwars-planets-search-eight.vercel.app/).
