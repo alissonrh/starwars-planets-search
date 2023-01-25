@@ -11,4 +11,4 @@ Este projeto foi desenvolvido com `React`. Para o gerenciamento de estado foi us
 
 ## Preview 
 
-Para ver e interagir com o projeto [clique aqui](https://starwars-planets-search-eight.vercel.app/).
+Para ver e interagir com o projeto [clique aqui](https://starwars-planets-search-alissonrh.vercel.app/).
